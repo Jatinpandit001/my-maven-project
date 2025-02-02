@@ -16,29 +16,39 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Verify Maven Installation
+        run: mvn --version
+
+      - name: Clean Previous Builds
+        run: mvn clean
+
+      - name: Force Update Dependencies
+        run: mvn clean compile -U
+
       - name: Validate Maven Project
         run: mvn validate
 
       - name: Compile the Project
-        run: mvn compile
+        run: mvn compile --fail-fast
 
       - name: Run Tests
-        run: mvn test
+        run: mvn test --fail-fast
 
       - name: Package the Project
-        run: mvn package
+        run: mvn package --fail-fast
 
       - name: Verify the Build
-        run: mvn verify
+        run: mvn verify --fail-fast
 
       - name: Install Package Locally
-        run: mvn install
+        run: mvn install --fail-fast
 
       - name: Deploy (Simulated)
         run: echo "Skipping deploy in this workflow"
 
-      - name: Clean Build Artifacts
-        run: mvn clean
-
       - name: Generate Site Documentation
         run: mvn site
+
+      - name: Upload Maven Logs on Failure
+        if: failure()
+        run: cat ~/.m2/repository/logs/*.log || echo "No logs found"
