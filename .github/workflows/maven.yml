@@ -1,0 +1,44 @@
+name: Maven Build Workflow
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Validate Maven Project
+        run: mvn validate
+
+      - name: Compile the Project
+        run: mvn compile
+
+      - name: Run Tests
+        run: mvn test
+
+      - name: Package the Project
+        run: mvn package
+
+      - name: Verify the Build
+        run: mvn verify
+
+      - name: Install Package Locally
+        run: mvn install
+
+      - name: Deploy (Simulated)
+        run: echo "Skipping deploy in this workflow"
+
+      - name: Clean Build Artifacts
+        run: mvn clean
+
+      - name: Generate Site Documentation
+        run: mvn site
