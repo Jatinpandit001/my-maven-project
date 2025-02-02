@@ -1,3 +1,5 @@
+package example;
+
 /**
  * Hello world!
  */
